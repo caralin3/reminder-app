@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import AppNavigator from './src/navigation/AppNavigator';
 
-export default function App(props: any) {
+const App = (props: any) => {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {
@@ -18,15 +18,15 @@ export default function App(props: any) {
         onFinish={() => handleFinishLoading(setLoadingComplete)}
       />
     );
-  } else {
-    return (
-      <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <AppNavigator />
-      </View>
-    );
   }
-}
+
+  return (
+    <View style={styles.container}>
+      {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+      <AppNavigator />
+    </View>
+  );
+};
 
 async function loadResourcesAsync() {
   await Promise.all([
@@ -60,3 +60,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   }
 });
+
+export default App;

@@ -8,7 +8,9 @@ export interface TabBarIconProps {
   focused: boolean;
 }
 
-export default function TabBarIcon(props: TabBarIconProps) {
+export const TabBarIcon: React.FC<TabBarIconProps> = (
+  props: TabBarIconProps
+) => {
   return (
     <Ionicons
       name={props.name}
@@ -17,4 +19,4 @@ export default function TabBarIcon(props: TabBarIconProps) {
       color={props.focused ? Colors.tabIconSelected : Colors.tabIconDefault}
     />
   );
-}
+};

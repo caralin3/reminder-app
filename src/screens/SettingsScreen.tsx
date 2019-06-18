@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 // import { ExpoConfigView } from '@expo/samples';
 
-export default function SettingsScreen() {
+export const SettingsScreen = () => {
   /**
    * Go ahead and delete ExpoConfigView and replace it with your content;
    * we just wanted to give you a quick view of your config.
@@ -12,7 +12,7 @@ export default function SettingsScreen() {
       <Text>Settings</Text>
     </View>
   );
-}
+};
 
 SettingsScreen.navigationOptions = {
   title: 'app.json'
