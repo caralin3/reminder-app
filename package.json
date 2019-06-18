@@ -1,0 +1,46 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject",
+    "test": "jest --watchAll",
+    "ts:format": "prettier --write src/**/*.ts src/**/*.tsx",
+    "ts:lint": "tslint --project ./",
+    "lint": "concurrently -n \"ts:lint\" -c \"red\" \"yarn run ts:lint\"",
+    "format": "concurrently -n \"ts:format\" -c \"red\" \"yarn run ts:format\""
+  },
+  "jest": {
+    "preset": "jest-expo"
+  },
+  "dependencies": {
+    "@expo/samples": "~3.0.0",
+    "@expo/vector-icons": "^10.0.1",
+    "expo": "^33.0.0",
+    "expo-asset": "^5.0.0",
+    "expo-constants": "^5.0.0",
+    "expo-font": "^5.0.0",
+    "expo-web-browser": "^5.0.0",
+    "react": "16.8.3",
+    "react-dom": "^16.8.6",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
+    "react-native-web": "^0.11.4",
+    "react-navigation": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/expo": "^32.0.13",
+    "@types/react-native": "^0.57.63",
+    "@types/react-test-renderer": "^16.8.2",
+    "babel-preset-expo": "^5.1.0",
+    "jest-expo": "^33.0.0",
+    "typescript": "^3.5.2"
+  },
+  "private": true,
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn run format && yarn run lint"
+    }
+  }
+}
