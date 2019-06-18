@@ -8,7 +8,7 @@ import {
 
 import { TabBarIcon } from '../components/TabBarIcon';
 import { HomeScreen } from '../screens/HomeScreen';
-import { LinksScreen } from '../screens/LinksScreen';
+import { PeopleScreen } from '../screens/PeopleScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 
 const HomeStack = createStackNavigator({
@@ -20,25 +20,21 @@ HomeStack.navigationOptions = {
   tabBarIcon: (props: TabBarIconProps) => (
     <TabBarIcon
       focused={props.focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${props.focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
+      name={Platform.OS === 'ios' ? 'ios-home' : 'md-home'}
     />
   )
 };
 
 const LinksStack = createStackNavigator({
-  Links: LinksScreen
+  Links: PeopleScreen
 });
 
 LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
+  tabBarLabel: 'People',
   tabBarIcon: (props: TabBarIconProps) => (
     <TabBarIcon
       focused={props.focused}
-      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
+      name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
     />
   )
 };
@@ -52,7 +48,7 @@ SettingsStack.navigationOptions = {
   tabBarIcon: (props: TabBarIconProps) => (
     <TabBarIcon
       focused={props.focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+      name={Platform.OS === 'ios' ? 'ios-settings' : 'md-settings'}
     />
   )
 };
