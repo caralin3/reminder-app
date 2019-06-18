@@ -7,7 +7,7 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "test": "jest --watchAll",
-    "ts:format": "prettier --write src/**/*.ts src/**/*.tsx",
+    "ts:format": "prettier --write src/**/*.ts src/**/*.tsx App.tsx",
     "ts:lint": "tslint --project ./",
     "lint": "concurrently -n \"ts:lint\" -c \"red\" \"yarn run ts:lint\"",
     "format": "concurrently -n \"ts:format\" -c \"red\" \"yarn run ts:format\""
