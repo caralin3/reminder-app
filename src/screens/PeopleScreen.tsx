@@ -4,14 +4,17 @@ import {
   Text,
   ScrollView,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList
 } from 'react-native';
 import { connect } from 'react-redux';
-import { HeaderIcon } from '../components';
+import { NavigationScreenProps } from 'react-navigation';
+import { HeaderIcon, ListItem, SearchBar } from '../components';
 import { ApplicationState } from '../store';
 import { Person } from '../types';
+import { sort } from '../utility';
 
-export interface PeopleScreenProps {
+export interface PeopleScreenProps extends NavigationScreenProps {
   people?: Person[];
 }
 
@@ -20,11 +23,26 @@ interface NavigationOptionsProps {
 }
 
 export const DisconnectedPeopleScreen: React.FC<PeopleScreenProps> = ({
-  people
+  people,
+  navigation
 }) => {
+  const sortedPeople = people ? sort(people, 'asc', 'name') : [];
   return (
     <ScrollView style={styles.container}>
-      {people && people.map(person => <Text>{person.name}</Text>)}
+      <SearchBar
+        onChangeText={(text: string) => console.log(text)}
+        onSearch={() => null}
+      />
+      <FlatList
+        data={sortedPeople}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <ListItem
+            item={item}
+            onPress={() => navigation.push('Person', { id: item.id })}
+          />
+        )}
+      />
     </ScrollView>
   );
 };
@@ -51,7 +69,6 @@ export const PeopleScreen = connect(mapStateToProps)(DisconnectedPeopleScreen);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
-    backgroundColor: '#fff'
+    paddingTop: 15
   }
 });

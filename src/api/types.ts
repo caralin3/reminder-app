@@ -20,7 +20,7 @@ export interface HebrewDateRequestParams {
   gy: number; // Gregorian year
   gm: number; // Gregorian month
   gd: number; // Gregorian day
-  gs?: 'on'; // After sunset
+  gs?: 'on' | 'off'; // After sunset
   g2h?: number; // Gregorian to Hebrew (1)
 }
 

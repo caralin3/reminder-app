@@ -1,24 +1,24 @@
 import React from 'react';
-import {
-  Platform,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity
-} from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
+import { NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
-import { PersonForm, HeaderIcon } from '../components';
+import { bindActionCreators, Dispatch } from 'redux';
+import { PersonForm } from '../components';
 import { ApplicationState } from '../store';
-// import { Person } from '../types';
+import * as peopleState from '../store/people';
+import { Person } from '../types';
 
-export interface AddPersonScreenProps {}
+export interface AddPersonScreenProps extends NavigationScreenProps {
+  addPerson: (person: Person) => void;
+}
 
-export const DisconnectedAddPersonScreen: React.FC<
-  AddPersonScreenProps
-> = () => {
+export const DisconnectedAddPersonScreen: React.FC<AddPersonScreenProps> = ({
+  addPerson,
+  navigation
+}) => {
   return (
     <ScrollView style={styles.container}>
-      <PersonForm />
+      <PersonForm addPerson={addPerson} navigation={navigation} />
     </ScrollView>
   );
 };
@@ -27,9 +27,18 @@ const mapStateToProps = (state: ApplicationState) => ({
   people: state.People.response
 });
 
-export const AddPersonScreen = connect(mapStateToProps)(
-  DisconnectedAddPersonScreen
-);
+const actionCreators = {
+  addPerson: (person: Person) => peopleState.add(person)
+};
+
+const mapActionsToProps = (dispatch: Dispatch) => ({
+  ...bindActionCreators(actionCreators, dispatch)
+});
+
+export const AddPersonScreen = connect(
+  mapStateToProps,
+  mapActionsToProps
+)(DisconnectedAddPersonScreen);
 
 (AddPersonScreen as any).navigationOptions = {
   title: 'Add Person'

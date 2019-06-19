@@ -1,6 +1,5 @@
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
-
 import Colors from '../constants/Colors';
 
 export interface TabBarIconProps {
@@ -10,13 +9,11 @@ export interface TabBarIconProps {
 
 export const TabBarIcon: React.FC<TabBarIconProps> = (
   props: TabBarIconProps
-) => {
-  return (
-    <Ionicons
-      name={props.name}
-      size={26}
-      style={{ marginBottom: -3 }}
-      color={props.focused ? Colors.tabIconSelected : Colors.tabIconDefault}
-    />
-  );
-};
+) => (
+  <Ionicons
+    name={props.name}
+    size={26}
+    style={{ marginBottom: -3 }}
+    color={props.focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+  />
+);

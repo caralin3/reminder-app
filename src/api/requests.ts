@@ -12,15 +12,20 @@ export const getQuerystring = (params: any) =>
     .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
     .join('&');
 
-export const fetchHebrewDate = async (gy: number, gm: number, gd: number) => {
+export const fetchHebrewDate = async (date: Date, gs: boolean) => {
   const method: FetchMethod = 'POST';
+  console.log(gs);
   const queryParams: HebrewDateRequestParams = {
-    gy,
-    gm,
-    gd,
+    gy: date.getFullYear(),
+    gm: date.getMonth() + 1,
+    gd: date.getDate(),
     cfg: 'json',
     g2h: 1
   };
+  if (gs) {
+    queryParams.gs = 'on';
+  }
+  console.log(queryParams);
   const query = getQuerystring(queryParams);
   const endpoint = `${baseAPI}?${query}`;
   return (await fetch(endpoint, { method })).json();
