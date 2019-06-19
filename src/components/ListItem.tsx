@@ -32,8 +32,8 @@ export const ListItem: React.FC<ListItemProps> = ({ item, onPress }) => (
 
 const styles = StyleSheet.create({
   container: {
-    borderBottomColor: Colors.tabIconDefault,
-    borderBottomWidth: 1,
+    borderTopColor: Colors.tabIconDefault,
+    borderTopWidth: 1,
     flex: 1,
     paddingHorizontal: 20,
     paddingVertical: 10

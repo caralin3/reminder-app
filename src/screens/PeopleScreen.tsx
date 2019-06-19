@@ -31,7 +31,8 @@ export const DisconnectedPeopleScreen: React.FC<PeopleScreenProps> = ({
     <ScrollView style={styles.container}>
       <SearchBar
         onChangeText={(text: string) => console.log(text)}
-        onSearch={() => null}
+        onFilter={() => null}
+        onSort={() => null}
       />
       <FlatList
         data={sortedPeople}
