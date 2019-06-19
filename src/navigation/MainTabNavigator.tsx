@@ -5,11 +5,11 @@ import {
   createBottomTabNavigator,
   TabBarIconProps
 } from 'react-navigation';
-
 import { TabBarIcon } from '../components/TabBarIcon';
 import { HomeScreen } from '../screens/HomeScreen';
 import { PeopleScreen } from '../screens/PeopleScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
+import { AddPersonScreen } from '../screens';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen
@@ -25,11 +25,12 @@ HomeStack.navigationOptions = {
   )
 };
 
-const LinksStack = createStackNavigator({
-  Links: PeopleScreen
+const PeopleStack = createStackNavigator({
+  People: PeopleScreen,
+  AddPerson: AddPersonScreen
 });
 
-LinksStack.navigationOptions = {
+PeopleStack.navigationOptions = {
   tabBarLabel: 'People',
   tabBarIcon: (props: TabBarIconProps) => (
     <TabBarIcon
@@ -55,6 +56,6 @@ SettingsStack.navigationOptions = {
 
 export default createBottomTabNavigator({
   HomeStack,
-  LinksStack,
+  PeopleStack,
   SettingsStack
 });

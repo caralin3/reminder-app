@@ -1,11 +1,22 @@
 import React from 'react';
-import { Text, ScrollView, StyleSheet } from 'react-native';
+import {
+  Platform,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity
+} from 'react-native';
 import { connect } from 'react-redux';
+import { HeaderIcon } from '../components';
 import { ApplicationState } from '../store';
 import { Person } from '../types';
 
 export interface PeopleScreenProps {
   people?: Person[];
+}
+
+interface NavigationOptionsProps {
+  navigation: any;
 }
 
 export const DisconnectedPeopleScreen: React.FC<PeopleScreenProps> = ({
@@ -24,9 +35,18 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 export const PeopleScreen = connect(mapStateToProps)(DisconnectedPeopleScreen);
 
-(PeopleScreen as any).navigationOptions = {
-  title: 'People'
-};
+(PeopleScreen as any).navigationOptions = ({
+  navigation
+}: NavigationOptionsProps) => ({
+  title: 'People',
+  headerRight: (
+    <TouchableOpacity onPress={() => navigation.navigate('AddPerson')}>
+      <HeaderIcon
+        name={Platform.OS === 'ios' ? 'ios-person-add' : 'md-person-add'}
+      />
+    </TouchableOpacity>
+  )
+});
 
 const styles = StyleSheet.create({
   container: {

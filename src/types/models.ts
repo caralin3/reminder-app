@@ -10,6 +10,5 @@ export interface Reminder {
   date: Date;
   holidays: Date[];
   personId: string;
-  years: number;
   alertOn: number;
 }

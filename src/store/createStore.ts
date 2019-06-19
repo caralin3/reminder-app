@@ -6,6 +6,8 @@ import { AsyncStorage } from 'react-native';
 import * as people from './people';
 import { ApplicationState } from '.';
 
+declare const window: any;
+
 export default (): Store<ApplicationState> => {
   const composeEnhancers = __DEV__
     ? // tslint:disable-next-line no-any no-string-literal
