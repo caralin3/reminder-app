@@ -28,9 +28,9 @@ import {
 import Colors from '../constants/Colors';
 import { isIos } from '../constants/System';
 import { Person } from '../types';
-
 export interface PersonFormProps {
   addPerson: (person: Person) => void;
+  person?: Person;
   navigation: NavigationScreenProp<
     NavigationRoute<NavigationParams>,
     NavigationParams
@@ -39,8 +39,10 @@ export interface PersonFormProps {
 
 export const PersonForm: React.FC<PersonFormProps> = ({
   addPerson,
+  person,
   navigation
 }) => {
+  const [edit, setEdit] = React.useState(false);
   const [showPicker, setShowPicker] = React.useState(false);
   const [name, setName] = React.useState('');
   const [selectedDate, setSelectedDate] = React.useState('');
@@ -48,6 +50,18 @@ export const PersonForm: React.FC<PersonFormProps> = ({
   const [alert, setAlert] = React.useState(0);
   const [checked, setChecked] = React.useState(false);
   const [numberInput, setNumberInput] = React.useState(false);
+
+  React.useEffect(() => {
+    if (person) {
+      setEdit(true);
+      console.log(person);
+      setName(person.name);
+      setSelectedDate(new Date(person.dod).toISOString());
+      if (person.afterSunset) {
+        setAfterSunset(person.afterSunset);
+      }
+    }
+  }, [person]);
 
   const renderAndroidDatePicker = async () => {
     try {
@@ -111,12 +125,13 @@ export const PersonForm: React.FC<PersonFormProps> = ({
           hebrewDate,
           name,
           dateType: 'gregorian',
-          deathDate: new Date(selectedDate),
+          dob: new Date(),
+          dod: new Date(selectedDate),
           id: uuidv4()
         };
         addPerson(newPerson);
         const message = `${newPerson.name} passed on:
-          \n${moment(newPerson.deathDate).format('MMMM DD, YYYY')} ${
+          \n${moment(newPerson.dod).format('MMMM DD, YYYY')} ${
           afterSunset ? 'after sundown' : 'before sundown'
         }
           \nHebrew Date: ${hebrewDate}
@@ -145,16 +160,17 @@ export const PersonForm: React.FC<PersonFormProps> = ({
     >
       <View style={styles.container}>
         <Text style={{ fontSize: 16, paddingBottom: 20 }}>
-          Add a person to get Yahrzeit dates
+          {edit ? 'Edit' : 'Add'} a person to get Yahrzeit dates
         </Text>
         <View style={styles.form}>
           <Text style={styles.label}>Name</Text>
           <TextInput
-            autoFocus
+            autoFocus={!edit}
             style={styles.textInput}
             placeholder="Name"
+            defaultValue={name}
             onChangeText={text => setName(text)}
-            onBlur={name ? handleChooseDate : () => null}
+            onBlur={name && !edit ? handleChooseDate : () => null}
           />
           <Text style={styles.label}>Date of Passing</Text>
           <View style={styles.chooseButton}>

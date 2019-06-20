@@ -5,11 +5,14 @@ import {
   createBottomTabNavigator,
   TabBarIconProps
 } from 'react-navigation';
-import { TabBarIcon } from '../components/TabBarIcon';
-import { HomeScreen } from '../screens/HomeScreen';
-import { PeopleScreen } from '../screens/PeopleScreen';
-import { SettingsScreen } from '../screens/SettingsScreen';
-import { AddPersonScreen } from '../screens';
+import { TabBarIcon } from '../components';
+import {
+  AddPersonScreen,
+  HomeScreen,
+  PeopleScreen,
+  ProfileScreen,
+  SettingsScreen
+} from '../screens';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen
@@ -27,7 +30,8 @@ HomeStack.navigationOptions = {
 
 const PeopleStack = createStackNavigator({
   People: PeopleScreen,
-  AddPerson: AddPersonScreen
+  AddPerson: AddPersonScreen,
+  Profile: ProfileScreen
 });
 
 PeopleStack.navigationOptions = {
