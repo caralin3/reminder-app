@@ -1,11 +1,12 @@
-import moment from 'moment';
 import React from 'react';
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
+import { Person } from '../types';
+import { getYearsSince } from '../utility/getters';
 
 export interface ListItemProps {
-  item: any;
+  item: Person;
   onPress: () => void;
 }
 
@@ -18,7 +19,7 @@ export const ListItem: React.FC<ListItemProps> = ({ item, onPress }) => (
     <View style={styles.row}>
       <Text>{item.name}</Text>
       <View style={styles.row}>
-        <Text>{moment(item.deathDate).format('MMM DD')}</Text>
+        <Text>{getYearsSince(new Date(item.dod).toISOString())} yr</Text>
         <Ionicons
           name="ios-arrow-forward"
           size={26}
