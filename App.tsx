@@ -2,7 +2,7 @@ import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import React, { useState } from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, YellowBox } from 'react-native';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import { persistStore } from 'redux-persist';
@@ -10,6 +10,11 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { Ionicons } from '@expo/vector-icons';
 import AppNavigator from './src/navigation/AppNavigator';
 import { ApplicationState, createStore } from './src/store';
+
+YellowBox.ignoreWarnings([
+  'Warning: componentWillMount is deprecated',
+  'Warning: componentWillReceiveProps is deprecated'
+]);
 
 const App = (props: any) => {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
