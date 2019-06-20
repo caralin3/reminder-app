@@ -104,15 +104,9 @@ const handleLearnMorePress = () => {
 };
 
 const handleHelpPress = async () => {
-  // WebBrowser.openBrowserAsync(
-  //   'https://docs.expo.io/versions/latest/workflow/up-and-running/#cant-see-your-changes'
-  // );
-  try {
-    const hebrewDate: ConverterResponse = await fetchHebrewDate(2016, 6, 22);
-    console.log(hebrewDate);
-  } catch (err) {
-    console.error(err);
-  }
+  WebBrowser.openBrowserAsync(
+    'https://docs.expo.io/versions/latest/workflow/up-and-running/#cant-see-your-changes'
+  );
 };
 
 const styles = StyleSheet.create({
