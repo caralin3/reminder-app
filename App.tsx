@@ -7,7 +7,12 @@ import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
-import { Ionicons } from '@expo/vector-icons';
+import {
+  Ionicons,
+  FontAwesome,
+  MaterialIcons,
+  MaterialCommunityIcons
+} from '@expo/vector-icons';
 import AppNavigator from './src/navigation/AppNavigator';
 import { ApplicationState, createStore } from './src/store';
 
@@ -20,6 +25,35 @@ const App = (props: any) => {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
 
   const store: Store<ApplicationState> = createStore();
+
+  const loadResourcesAsync = async () => {
+    await Promise.all([
+      Asset.loadAsync([
+        require('./src/assets/images/robot-dev.png'),
+        require('./src/assets/images/robot-prod.png')
+      ]),
+      Font.loadAsync({
+        // This is the font that we are using for our tab bar
+        ...FontAwesome.font,
+        ...Ionicons.font,
+        ...MaterialIcons.font,
+        ...MaterialCommunityIcons.font,
+        // We include SpaceMono because we use it in HomeScreen.js. Feel free to
+        // remove this if you are not using it in your app
+        'space-mono': require('./src/assets/fonts/SpaceMono-Regular.ttf')
+      })
+    ]);
+  };
+
+  const handleLoadingError = (error: Error) => {
+    // In this case, you might want to report the error to your error reporting
+    // service, for example Sentry
+    console.warn(error);
+  };
+
+  const handleFinishLoading = (setLoadingComplete: (bool: boolean) => void) => {
+    setLoadingComplete(true);
+  };
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return (
@@ -46,32 +80,6 @@ const App = (props: any) => {
     </Provider>
   );
 };
-
-async function loadResourcesAsync() {
-  await Promise.all([
-    Asset.loadAsync([
-      require('./src/assets/images/robot-dev.png'),
-      require('./src/assets/images/robot-prod.png')
-    ]),
-    Font.loadAsync({
-      // This is the font that we are using for our tab bar
-      ...Ionicons.font,
-      // We include SpaceMono because we use it in HomeScreen.js. Feel free to
-      // remove this if you are not using it in your app
-      'space-mono': require('./src/assets/fonts/SpaceMono-Regular.ttf')
-    })
-  ]);
-}
-
-function handleLoadingError(error: Error) {
-  // In this case, you might want to report the error to your error reporting
-  // service, for example Sentry
-  console.warn(error);
-}
-
-function handleFinishLoading(setLoadingComplete: (bool: boolean) => void) {
-  setLoadingComplete(true);
-}
 
 const styles = StyleSheet.create({
   container: {
