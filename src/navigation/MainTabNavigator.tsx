@@ -1,15 +1,19 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import {
+  createMaterialTopTabNavigator,
   createStackNavigator,
-  createBottomTabNavigator,
   TabBarIconProps
 } from 'react-navigation';
-
-import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import { TabBarIcon } from '../components';
+import {
+  AddPersonScreen,
+  HomeScreen,
+  PeopleScreen,
+  ProfileScreen,
+  SettingsScreen
+} from '../screens';
+import Colors from '../constants/Colors';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen
@@ -20,25 +24,23 @@ HomeStack.navigationOptions = {
   tabBarIcon: (props: TabBarIconProps) => (
     <TabBarIcon
       focused={props.focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${props.focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
+      name={Platform.OS === 'ios' ? 'ios-home' : 'md-home'}
     />
   )
 };
 
-const LinksStack = createStackNavigator({
-  Links: LinksScreen
+const PeopleStack = createStackNavigator({
+  People: PeopleScreen,
+  AddPerson: AddPersonScreen,
+  Profile: ProfileScreen
 });
 
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
+PeopleStack.navigationOptions = {
+  tabBarLabel: 'People',
   tabBarIcon: (props: TabBarIconProps) => (
     <TabBarIcon
       focused={props.focused}
-      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
+      name={Platform.OS === 'ios' ? 'ios-people' : 'md-people'}
     />
   )
 };
@@ -52,13 +54,35 @@ SettingsStack.navigationOptions = {
   tabBarIcon: (props: TabBarIconProps) => (
     <TabBarIcon
       focused={props.focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+      name={Platform.OS === 'ios' ? 'ios-settings' : 'md-settings'}
     />
   )
 };
 
-export default createBottomTabNavigator({
-  HomeStack,
-  LinksStack,
-  SettingsStack
-});
+export default createMaterialTopTabNavigator(
+  {
+    HomeStack,
+    PeopleStack,
+    SettingsStack
+  },
+  {
+    swipeEnabled: true,
+    tabBarPosition: 'bottom',
+    tabBarOptions: {
+      showIcon: true,
+      activeTintColor: Colors.tabIconSelected,
+      inactiveTintColor: Colors.tabIconDefault,
+      indicatorStyle: {
+        backgroundColor: Colors.tabIconSelected
+      },
+      labelStyle: {
+        fontSize: 12,
+        margin: 0
+      },
+      upperCaseLabel: false,
+      style: {
+        backgroundColor: 'white'
+      }
+    }
+  }
+);

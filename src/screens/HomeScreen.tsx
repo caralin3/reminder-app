@@ -12,7 +12,7 @@ import {
 
 import { MonoText } from '../components/StyledText';
 
-export default function HomeScreen() {
+export const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView
@@ -48,9 +48,7 @@ export default function HomeScreen() {
 
         <View style={styles.helpContainer}>
           <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>
-              Help, it didn’t automatically reload!
-            </Text>
+            <Text style={styles.helpLinkText}>Convert Gregorian to Hebrew</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -70,13 +68,13 @@ export default function HomeScreen() {
       </View>
     </View>
   );
-}
+};
 
 HomeScreen.navigationOptions = {
   header: null
 };
 
-function DevelopmentModeNotice() {
+const DevelopmentModeNotice = () => {
   if (__DEV__) {
     const learnMoreButton = (
       <Text onPress={handleLearnMorePress} style={styles.helpLinkText}>
@@ -90,26 +88,25 @@ function DevelopmentModeNotice() {
         useful development tools. {learnMoreButton}
       </Text>
     );
-  } else {
-    return (
-      <Text style={styles.developmentModeText}>
-        You are not in development mode: your app will run at full speed.
-      </Text>
-    );
   }
-}
+  return (
+    <Text style={styles.developmentModeText}>
+      You are not in development mode: your app will run at full speed.
+    </Text>
+  );
+};
 
-function handleLearnMorePress() {
+const handleLearnMorePress = () => {
   WebBrowser.openBrowserAsync(
     'https://docs.expo.io/versions/latest/workflow/development-mode/'
   );
-}
+};
 
-function handleHelpPress() {
+const handleHelpPress = async () => {
   WebBrowser.openBrowserAsync(
     'https://docs.expo.io/versions/latest/workflow/up-and-running/#cant-see-your-changes'
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
