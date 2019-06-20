@@ -1,14 +1,16 @@
 export interface Person {
   afterSunset?: boolean;
-  dateType: 'hebrew' | 'gregorian';
-  deathDate: Date;
-  hebrewDate: string;
+  dob?: string;
+  dod: string;
+  hDob?: string;
+  hDod: string;
+  holidayReminder?: boolean;
   id: string;
   name: string;
+  relationship?: string;
 }
 
 export interface Reminder {
-  date: Date;
-  holidays: boolean;
+  date: string;
   personId: string;
 }

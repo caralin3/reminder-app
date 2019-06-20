@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 
 import { MonoText } from '../components/StyledText';
-import { fetchHebrewDate, ConverterResponse } from '../api';
 
 export const HomeScreen = () => {
   return (

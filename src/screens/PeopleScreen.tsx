@@ -9,7 +9,12 @@ import {
   View
 } from 'react-native';
 import { connect } from 'react-redux';
-import { NavigationScreenProps } from 'react-navigation';
+import {
+  NavigationParams,
+  NavigationRoute,
+  NavigationScreenProps,
+  NavigationScreenProp
+} from 'react-navigation';
 import {
   AlphabetScrollbar,
   HeaderIcon,
@@ -25,7 +30,10 @@ export interface PeopleScreenProps extends NavigationScreenProps {
 }
 
 interface NavigationOptionsProps {
-  navigation: any;
+  navigation: NavigationScreenProp<
+    NavigationRoute<NavigationParams>,
+    NavigationParams
+  >;
 }
 
 export const DisconnectedPeopleScreen: React.FC<PeopleScreenProps> = ({
@@ -55,9 +63,14 @@ export const DisconnectedPeopleScreen: React.FC<PeopleScreenProps> = ({
           renderItem={({ item }) => (
             <ListItem
               item={item}
-              onPress={() => navigation.push('Person', { id: item.id })}
+            onPress={() =>
+              navigation.push('Profile', { id: item.id, name: item.name })
+            }
             />
           )}
+        ListEmptyComponent={
+          <Text style={{ paddingHorizontal: 20 }}>No people to show</Text>
+        }
         />
         <AlphabetScrollbar />
       </View>
@@ -77,9 +90,7 @@ export const PeopleScreen = connect(mapStateToProps)(DisconnectedPeopleScreen);
   title: 'People',
   headerRight: (
     <TouchableOpacity onPress={() => navigation.navigate('AddPerson')}>
-      <HeaderIcon
-        name={Platform.OS === 'ios' ? 'ios-person-add' : 'md-person-add'}
-      />
+      <HeaderIcon name="person-add" />
     </TouchableOpacity>
   )
 });
