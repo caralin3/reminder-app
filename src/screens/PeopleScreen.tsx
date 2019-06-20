@@ -63,14 +63,14 @@ export const DisconnectedPeopleScreen: React.FC<PeopleScreenProps> = ({
           renderItem={({ item }) => (
             <ListItem
               item={item}
-            onPress={() =>
-              navigation.push('Profile', { id: item.id, name: item.name })
-            }
+              onPress={() =>
+                navigation.push('Profile', { id: item.id, name: item.name })
+              }
             />
           )}
-        ListEmptyComponent={
-          <Text style={{ paddingHorizontal: 20 }}>No people to show</Text>
-        }
+          ListEmptyComponent={
+            <Text style={{ paddingHorizontal: 20 }}>No people to show</Text>
+          }
         />
         <AlphabetScrollbar />
       </View>
