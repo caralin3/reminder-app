@@ -123,13 +123,13 @@ export const PersonForm: React.FC<PersonFormProps> = ({
           dob,
           dod,
           name,
-          id: uuidv4(),
+          id: uuidv4()
         };
         addPerson(newPerson);
         const message = `${newPerson.name} passed on:
           \n${moment(newPerson.dod).format('MMMM DD, YYYY')} ${
           afterSunset ? 'after sundown' : 'before sundown'
-          }
+        }
           \nHebrew Date: ${hDod}
           \nNext Yahrzeit Candle lighting:
           \nThe night before ${moment(nextDate).format('MMMM DD, YYYY')}
