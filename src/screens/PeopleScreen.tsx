@@ -1,15 +1,21 @@
 import React from 'react';
 import {
+  FlatList,
   Platform,
   Text,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  FlatList
+  View
 } from 'react-native';
 import { connect } from 'react-redux';
 import { NavigationScreenProps } from 'react-navigation';
-import { HeaderIcon, ListItem, SearchBar } from '../components';
+import {
+  AlphabetScrollbar,
+  HeaderIcon,
+  ListItem,
+  SearchBar
+} from '../components';
 import { ApplicationState } from '../store';
 import { Person } from '../types';
 import { sort } from '../utility';
@@ -28,22 +34,33 @@ export const DisconnectedPeopleScreen: React.FC<PeopleScreenProps> = ({
 }) => {
   const sortedPeople = people ? sort(people, 'asc', 'name') : [];
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <SearchBar
         onChangeText={(text: string) => console.log(text)}
         onFilter={() => null}
         onSort={() => null}
       />
-      <FlatList
-        data={sortedPeople}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <ListItem
-            item={item}
-            onPress={() => navigation.push('Person', { id: item.id })}
-          />
-        )}
-      />
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          paddingRight: 10
+        }}
+      >
+        <FlatList
+          style={{ marginRight: 10 }}
+          data={sortedPeople}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => (
+            <ListItem
+              item={item}
+              onPress={() => navigation.push('Person', { id: item.id })}
+            />
+          )}
+        />
+        <AlphabetScrollbar />
+      </View>
     </ScrollView>
   );
 };
