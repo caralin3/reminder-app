@@ -13,7 +13,7 @@ import { ApplicationState, createStore } from './src/store';
 
 YellowBox.ignoreWarnings([
   'Warning: componentWillMount is deprecated',
-  'Warning: componentWillReceiveProps is deprecated',
+  'Warning: componentWillReceiveProps is deprecated'
 ]);
 
 const App = (props: any) => {
