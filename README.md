@@ -1,4 +1,4 @@
-# Yahrzeit Reminder App
+# Reminder App
 
 This is a mobile app created with [expo-cli][expo].
 
