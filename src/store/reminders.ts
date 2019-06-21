@@ -1,9 +1,9 @@
 import actionCreatorFactory from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
+import { Reminder } from '../types';
 import { rehydrateAction } from './utility';
-import { Reminder } from '../types/models';
 
-const NAME = 'REMINDER';
+const NAME = 'REMINDERS';
 const RESET = 'RESET';
 const ADD = 'ADD';
 const EDIT = 'EDIT';

@@ -13,6 +13,7 @@ import { NavigationScreenProps } from 'react-navigation';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ConverterResponse, fetchGregorianDate, HebrewMonths } from '../api';
 import Colors from '../constants/Colors';
+import { mockPeople as people } from '../mock';
 import { ApplicationState } from '../store';
 import { NavigationOptionsProps, Person } from '../types';
 import { getYearsSince } from '../utility';
@@ -22,8 +23,8 @@ export interface ProfileScreenProps extends NavigationScreenProps {
 }
 
 export const DisconnectedProfileScreen: React.FC<ProfileScreenProps> = ({
-  navigation,
-  people
+  navigation
+  // people
 }) => {
   const [loading, setLoading] = React.useState(false);
   const [person, setPerson] = React.useState<Person | undefined>(undefined);

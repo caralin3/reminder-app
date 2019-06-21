@@ -1,7 +1,7 @@
 import actionCreatorFactory from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
+import { Person } from '../types';
 import { rehydrateAction } from './utility';
-import { Person } from '../types/models';
 
 const NAME = 'PERSON';
 const RESET = 'RESET';

@@ -4,6 +4,7 @@ import { NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { PersonForm } from '../components';
+import { mockPeople as people } from '../mock';
 import { ApplicationState } from '../store';
 import * as peopleState from '../store/people';
 import { NavigationOptionsProps, Person } from '../types';
@@ -15,7 +16,7 @@ export interface AddPersonScreenProps extends NavigationScreenProps {
 
 export const DisconnectedAddPersonScreen: React.FC<AddPersonScreenProps> = ({
   addPerson,
-  people,
+  // people,
   navigation
 }) => {
   const {

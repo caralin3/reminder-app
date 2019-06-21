@@ -5,12 +5,15 @@ import Colors from '../constants/Colors';
 import { Person } from '../types';
 import { getYearsSince } from '../utility/getters';
 
-export interface ListItemProps {
+export interface PersonListItemProps {
   item: Person;
   onPress: () => void;
 }
 
-export const ListItem: React.FC<ListItemProps> = ({ item, onPress }) => (
+export const PersonListItem: React.FC<PersonListItemProps> = ({
+  item,
+  onPress
+}) => (
   <TouchableHighlight
     style={styles.container}
     underlayColor={Colors.tabIconDefault}
