@@ -1,7 +1,8 @@
-import { AppLoading } from 'expo';
+import { AppLoading, Notifications } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
-import React, { useState } from 'react';
+import * as Permissions from 'expo-permissions';
+import React from 'react';
 import { Platform, StatusBar, StyleSheet, View, YellowBox } from 'react-native';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
@@ -22,9 +23,15 @@ YellowBox.ignoreWarnings([
 ]);
 
 const App = (props: any) => {
-  const [isLoadingComplete, setLoadingComplete] = useState(false);
+  const [isLoadingComplete, setLoadingComplete] = React.useState(false);
+  const [token, setToken] = React.useState('');
 
   const store: Store<ApplicationState> = createStore();
+  let subscription: any;
+
+  React.useEffect(() => {
+    registerForPushNotifications();
+  }, []);
 
   const loadResourcesAsync = async () => {
     await Promise.all([
@@ -53,6 +60,32 @@ const App = (props: any) => {
 
   const handleFinishLoading = (setLoadingComplete: (bool: boolean) => void) => {
     setLoadingComplete(true);
+  };
+
+  const handleNotification = (notification: any) => {
+    console.log('Notification', notification);
+  };
+
+  const registerForPushNotifications = async () => {
+    try {
+      const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+
+      if (status !== 'granted') {
+        const { status } = await Permissions.askAsync(
+          Permissions.NOTIFICATIONS
+        );
+        if (status !== 'granted') {
+          return;
+        }
+      }
+
+      const pushToken = await Notifications.getExpoPushTokenAsync();
+      console.log('Token', pushToken);
+      setToken(pushToken);
+      subscription = Notifications.addListener(handleNotification);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {
