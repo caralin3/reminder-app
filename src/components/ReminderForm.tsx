@@ -3,12 +3,10 @@ import React from 'react';
 import {
   Alert,
   Button,
-  DatePickerAndroid,
   DatePickerIOS,
   StyleSheet,
   Text,
   TextInput,
-  TimePickerAndroid,
   View
 } from 'react-native';
 import {
@@ -26,6 +24,7 @@ import {
 import Colors from '../constants/Colors';
 import { isIos } from '../constants/System';
 import { Person } from '../types';
+import { renderAndroidDatePicker, renderAndroidTimePicker } from '../utility';
 
 export interface ReminderFormProps {
   addPerson: (person: Person) => void;
@@ -44,8 +43,6 @@ export const ReminderForm: React.FC<ReminderFormProps> = ({
   const [edit, setEdit] = React.useState(false);
   const [showPicker, setShowPicker] = React.useState(false);
   const [name, setName] = React.useState('');
-  const [relationship, setRelationship] = React.useState('');
-  const [dob, setDob] = React.useState('');
   const [dod, setDod] = React.useState('');
   const [afterSunset, setAfterSunset] = React.useState(false);
 
@@ -54,55 +51,17 @@ export const ReminderForm: React.FC<ReminderFormProps> = ({
       setEdit(true);
       console.log(person);
       setName(person.name);
-      if (person.relationship) {
-        setRelationship(person.relationship);
-      }
       setDod(new Date(person.dod).toISOString());
-      if (person.afterSunset) {
-        setAfterSunset(person.afterSunset);
-      }
     }
   }, [person]);
-
-  const renderAndroidDatePicker = async () => {
-    try {
-      const { action, year, month, day } = (await DatePickerAndroid.open({
-        date: new Date(),
-        mode: 'spinner'
-      })) as any;
-      if (action !== DatePickerAndroid.dismissedAction) {
-        const date = new Date(year, month, day);
-        await renderAndroidTimePicker(date);
-      }
-    } catch ({ code, message }) {
-      console.warn('Cannot open date picker', message);
-    }
-  };
-
-  const renderAndroidTimePicker = async (selectedDate: Date) => {
-    try {
-      const { action, hour, minute } = (await TimePickerAndroid.open({
-        hour: new Date().getHours(),
-        minute: 0,
-        is24Hour: false,
-        mode: 'spinner'
-      })) as any;
-      if (action !== TimePickerAndroid.dismissedAction) {
-        const date = new Date(selectedDate);
-        date.setHours(hour);
-        date.setMinutes(minute);
-        setDod(date.toISOString());
-      }
-    } catch ({ code, message }) {
-      console.warn('Cannot open date picker', message);
-    }
-  };
 
   const handleChooseDate = () => {
     if (isIos) {
       setShowPicker(true);
     } else {
-      renderAndroidDatePicker();
+      renderAndroidDatePicker(d =>
+        renderAndroidTimePicker(d, date => setDod(date))
+      );
     }
   };
 
@@ -141,7 +100,6 @@ export const ReminderForm: React.FC<ReminderFormProps> = ({
         const newPerson: Person = {
           afterSunset,
           hDod,
-          dob,
           dod,
           name,
           id: uuidv4()
@@ -180,65 +138,7 @@ export const ReminderForm: React.FC<ReminderFormProps> = ({
           defaultValue={name}
           onChangeText={text => setName(text)}
         />
-        <Text style={styles.label}>Relationship (optional)</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Father"
-          defaultValue={relationship}
-          onChangeText={text => setRelationship(text)}
-          onBlur={name && !edit ? handleChooseDate : () => null}
-        />
-        {edit && (
-          <View>
-            <Text style={styles.label}>Date of Birth (optional)</Text>
-            <View style={styles.chooseButton}>
-              <Text
-                style={dod ? styles.date : styles.emptyDate}
-                onPress={handleChooseDate}
-              >
-                {dod
-                  ? moment(new Date(dod)).format('MMM DD, YYYY h:mm')
-                  : 'Choose Date'}
-              </Text>
-            </View>
-            {showPicker && (
-              <DatePickerIOS
-                date={new Date(dod)}
-                onDateChange={date => setDod(date.toISOString())}
-              />
-            )}
-            <View style={styles.col}>
-              <Text style={styles.label}>After Sunset?</Text>
-              <View style={styles.row}>
-                <View style={styles.sunsetButton}>
-                  <Button
-                    title="Yes"
-                    color={
-                      afterSunset
-                        ? Colors.tabIconSelected
-                        : Colors.tabIconDefault
-                    }
-                    onPress={() => setAfterSunset(true)}
-                    accessibilityLabel="Set after sunset"
-                  />
-                </View>
-                <View style={styles.sunsetButton}>
-                  <Button
-                    title="No"
-                    color={
-                      !afterSunset
-                        ? Colors.tabIconSelected
-                        : Colors.tabIconDefault
-                    }
-                    onPress={() => setAfterSunset(false)}
-                    accessibilityLabel="Set before sunset"
-                  />
-                </View>
-              </View>
-            </View>
-          </View>
-        )}
-        <Text style={styles.label}>Date of Passing</Text>
+        <Text style={styles.label}>Date</Text>
         <View style={styles.chooseButton}>
           <Text
             style={dod ? styles.date : styles.emptyDate}
@@ -255,31 +155,6 @@ export const ReminderForm: React.FC<ReminderFormProps> = ({
             onDateChange={date => setDod(date.toISOString())}
           />
         )}
-        <View style={styles.col}>
-          <Text style={styles.label}>After Sunset?</Text>
-          <View style={styles.row}>
-            <View style={styles.sunsetButton}>
-              <Button
-                title="Yes"
-                color={
-                  afterSunset ? Colors.tabIconSelected : Colors.tabIconDefault
-                }
-                onPress={() => setAfterSunset(true)}
-                accessibilityLabel="Set after sunset"
-              />
-            </View>
-            <View style={styles.sunsetButton}>
-              <Button
-                title="No"
-                color={
-                  !afterSunset ? Colors.tabIconSelected : Colors.tabIconDefault
-                }
-                onPress={() => setAfterSunset(false)}
-                accessibilityLabel="Set before sunset"
-              />
-            </View>
-          </View>
-        </View>
         <View style={styles.submit}>
           <Button
             title="Submit"

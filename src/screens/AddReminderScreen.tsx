@@ -64,7 +64,7 @@ export const AddReminderScreen = connect(
 (AddReminderScreen as any).navigationOptions = ({
   navigation
 }: NavigationOptionsProps) => ({
-  title: navigation.state.params ? 'Edit Person' : 'Add Person'
+  title: navigation.state.params ? 'Edit Reminder' : 'Add Reminder'
 });
 
 const styles = StyleSheet.create({

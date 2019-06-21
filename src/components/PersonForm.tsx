@@ -25,6 +25,7 @@ import {
 import Colors from '../constants/Colors';
 import { isIos } from '../constants/System';
 import { Person } from '../types';
+import { renderAndroidDatePicker } from '../utility';
 export interface PersonFormProps {
   addPerson: (person: Person) => void;
   person?: Person;
@@ -62,26 +63,11 @@ export const PersonForm: React.FC<PersonFormProps> = ({
     }
   }, [person]);
 
-  const renderAndroidDatePicker = async () => {
-    try {
-      const { action, year, month, day } = (await DatePickerAndroid.open({
-        date: new Date(),
-        mode: 'spinner'
-      })) as any;
-      if (action !== DatePickerAndroid.dismissedAction) {
-        const date = new Date(year, month, day);
-        setDod(date.toISOString());
-      }
-    } catch ({ code, message }) {
-      console.warn('Cannot open date picker', message);
-    }
-  };
-
   const handleChooseDate = () => {
     if (isIos) {
       setShowPicker(true);
     } else {
-      renderAndroidDatePicker();
+      renderAndroidDatePicker(d => setDod(d));
     }
   };
 
