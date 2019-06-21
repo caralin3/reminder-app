@@ -1,33 +1,20 @@
 import React from 'react';
 import {
-  Platform,
-  Text,
+  FlatList,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
-  FlatList
+  Text,
+  TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
-import {
-  NavigationParams,
-  NavigationRoute,
-  NavigationScreenProps,
-  NavigationScreenProp
-} from 'react-navigation';
+import { NavigationScreenProps } from 'react-navigation';
 import { HeaderIcon, ListItem, SearchBar } from '../components';
 import { ApplicationState } from '../store';
-import { Person } from '../types';
+import { NavigationOptionsProps, Person } from '../types';
 import { sort } from '../utility';
 
 export interface PeopleScreenProps extends NavigationScreenProps {
   people: Person[];
-}
-
-interface NavigationOptionsProps {
-  navigation: NavigationScreenProp<
-    NavigationRoute<NavigationParams>,
-    NavigationParams
-  >;
 }
 
 export const DisconnectedPeopleScreen: React.FC<PeopleScreenProps> = ({

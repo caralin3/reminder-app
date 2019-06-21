@@ -9,17 +9,12 @@ import {
   View
 } from 'react-native';
 import { connect } from 'react-redux';
-import {
-  NavigationParams,
-  NavigationRoute,
-  NavigationScreenProps,
-  NavigationScreenProp
-} from 'react-navigation';
+import { NavigationScreenProps } from 'react-navigation';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ConverterResponse, fetchGregorianDate, HebrewMonths } from '../api';
 import Colors from '../constants/Colors';
 import { ApplicationState } from '../store';
-import { Person } from '../types';
+import { NavigationOptionsProps, Person } from '../types';
 import { getYearsSince } from '../utility';
 
 export interface ProfileScreenProps extends NavigationScreenProps {
@@ -123,13 +118,6 @@ const mapStateToProps = (state: ApplicationState) => ({
 export const ProfileScreen = connect(mapStateToProps)(
   DisconnectedProfileScreen
 );
-
-interface NavigationOptionsProps {
-  navigation: NavigationScreenProp<
-    NavigationRoute<NavigationParams>,
-    NavigationParams
-  >;
-}
 
 (ProfileScreen as any).navigationOptions = ({
   navigation

@@ -1,39 +1,40 @@
 import React from 'react';
 import {
   Animated,
+  Easing,
   Image,
   FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-  Easing
+  View
 } from 'react-native';
-import { Header } from 'react-navigation';
+import { Header, NavigationScreenProps } from 'react-navigation';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
-import { Person, Reminder } from '../types';
+import { NavigationOptionsProps, Person, Reminder } from '../types';
 import { sort } from '../utility';
 
-export interface HomeScreenProps {
+export interface HomeScreenProps extends NavigationScreenProps {
   people: Person[];
   reminders: Reminder[];
 }
 
 export const DisconnectedHomeScreen: React.FC<HomeScreenProps> = ({
+  navigation,
   reminders
 }) => {
   const [bounceValue] = React.useState<Animated.Value>(new Animated.Value(0));
-  const sortedReminders = reminders ? sort(reminders, 'asc', 'date') : [];
+  const sortedReminders = reminders ? sort(reminders, 'desc', 'date') : [];
 
   React.useEffect(() => {
     if (reminders.length === 0) {
       animate();
     }
-  }, [reminders]);
+  }, [navigation.state.routeName]);
 
   const animate = () => {
     Animated.loop(
@@ -96,7 +97,9 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 export const HomeScreen = connect(mapStateToProps)(DisconnectedHomeScreen);
 
-(HomeScreen as any).navigationOptions = ({ navigation }: any) => ({
+(HomeScreen as any).navigationOptions = ({
+  navigation
+}: NavigationOptionsProps) => ({
   title: 'Yahrzeit Reminders',
   headerRight: (
     <TouchableOpacity onPress={() => navigation.navigate('AddReminder')}>

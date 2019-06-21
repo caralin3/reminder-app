@@ -1,17 +1,12 @@
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import {
-  NavigationParams,
-  NavigationRoute,
-  NavigationScreenProp,
-  NavigationScreenProps
-} from 'react-navigation';
+import { NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { PersonForm } from '../components';
 import { ApplicationState } from '../store';
 import * as peopleState from '../store/people';
-import { Person } from '../types';
+import { NavigationOptionsProps, Person } from '../types';
 
 export interface AddPersonScreenProps extends NavigationScreenProps {
   addPerson: (person: Person) => void;
@@ -62,13 +57,6 @@ export const AddPersonScreen = connect(
   mapStateToProps,
   mapActionsToProps
 )(DisconnectedAddPersonScreen);
-
-interface NavigationOptionsProps {
-  navigation: NavigationScreenProp<
-    NavigationRoute<NavigationParams>,
-    NavigationParams
-  >;
-}
 
 (AddPersonScreen as any).navigationOptions = ({
   navigation
