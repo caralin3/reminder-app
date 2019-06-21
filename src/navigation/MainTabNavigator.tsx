@@ -8,6 +8,7 @@ import {
 import { TabBarIcon } from '../components';
 import {
   AddPersonScreen,
+  AddReminderScreen,
   HomeScreen,
   PeopleScreen,
   ProfileScreen,
@@ -16,7 +17,8 @@ import {
 import Colors from '../constants/Colors';
 
 const HomeStack = createStackNavigator({
-  Home: HomeScreen
+  Home: HomeScreen,
+  AddReminder: AddReminderScreen
 });
 
 HomeStack.navigationOptions = {

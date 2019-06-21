@@ -23,11 +23,11 @@ export const ReminderListItem: React.FC<ReminderListItemProps> = ({
   >
     {person && (
       <View style={styles.row}>
-        <Text>{person.name}</Text>
-        <View style={styles.row}>
-          <Text>{moment(item.date).format('MMM DD')}</Text>
-          {/* Toggle */}
+        <View>
+          <Text>Light {person.name}'s Candle</Text>
+          <Text>{moment(item.date).format('MMM DD hh:mm')}</Text>
         </View>
+        {/* Toggle */}
       </View>
     )}
   </TouchableHighlight>
