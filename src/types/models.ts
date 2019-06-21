@@ -12,5 +12,6 @@ export interface Person {
 
 export interface Reminder {
   date: string;
+  id: string;
   personId: string;
 }

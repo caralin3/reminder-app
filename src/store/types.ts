@@ -1,4 +1,5 @@
 import { PeopleState } from './people';
+import { RemindersState } from './reminders';
 
 export interface AsyncState<T> {
   response?: T;
@@ -8,4 +9,5 @@ export interface AsyncState<T> {
 
 export interface ApplicationState {
   People: PeopleState;
+  Reminders: RemindersState;
 }

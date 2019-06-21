@@ -20,7 +20,7 @@ import { Person } from '../types';
 import { sort } from '../utility';
 
 export interface PeopleScreenProps extends NavigationScreenProps {
-  people?: Person[];
+  people: Person[];
 }
 
 interface NavigationOptionsProps {
@@ -34,7 +34,7 @@ export const DisconnectedPeopleScreen: React.FC<PeopleScreenProps> = ({
   people,
   navigation
 }) => {
-  const sortedPeople = people ? sort(people, 'asc', 'name') : [];
+  const sortedPeople = sort(people, 'asc', 'name');
   return (
     <ScrollView style={styles.container}>
       <SearchBar

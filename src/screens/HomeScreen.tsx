@@ -1,198 +1,141 @@
-import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import {
+  Animated,
   Image,
-  Platform,
-  ScrollView,
+  FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
+  Easing
 } from 'react-native';
+import { Header } from 'react-navigation';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import Colors from '../constants/Colors';
+import Layout from '../constants/Layout';
+import { connect } from 'react-redux';
+import { ApplicationState } from '../store';
+import { Person, Reminder } from '../types';
+import { sort } from '../utility';
 
-import { MonoText } from '../components/StyledText';
+export interface HomeScreenProps {
+  people: Person[];
+  reminders: Reminder[];
+}
 
-export const HomeScreen = () => {
+export const DisconnectedHomeScreen: React.FC<HomeScreenProps> = ({
+  reminders
+}) => {
+  const [bounceValue] = React.useState<Animated.Value>(new Animated.Value(0));
+  const sortedReminders = reminders ? sort(reminders, 'asc', 'date') : [];
+
+  React.useEffect(() => {
+    if (reminders.length === 0) {
+      animate();
+    }
+  }, [reminders]);
+
+  const animate = () => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(bounceValue, {
+          easing: Easing.linear,
+          toValue: 1,
+          useNativeDriver: true
+        }),
+        Animated.timing(bounceValue, {
+          easing: Easing.linear,
+          toValue: 0,
+          useNativeDriver: true
+        })
+      ])
+    ).start();
+  };
+
+  const translateY = bounceValue.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [0, 10, 15]
+  });
+
+  const emptyComponent = (
+    <View style={styles.emptyContainer}>
+      <Image
+        source={require('../assets/images/robot-prod.png')}
+        style={styles.emptyImage}
+      />
+      <Text style={styles.emptyMessage}>
+        You can start adding reminders by creating people.
+      </Text>
+      <Animated.Text style={[styles.arrow, { transform: [{ translateY }] }]}>
+        <MaterialCommunityIcons
+          name="arrow-down"
+          color={Colors.tabIconSelected}
+          size={36}
+        />
+      </Animated.Text>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}
-      >
-        <View style={styles.welcomeContainer}>
-          <Image
-            source={
-              __DEV__
-                ? require('../assets/images/robot-dev.png')
-                : require('../assets/images/robot-prod.png')
-            }
-            style={styles.welcomeImage}
-          />
-        </View>
-
-        <View style={styles.getStartedContainer}>
-          <DevelopmentModeNotice />
-
-          <Text style={styles.getStartedText}>Get started by opening</Text>
-
-          <View
-            style={[styles.codeHighlightContainer, styles.homeScreenFilename]}
-          >
-            <MonoText>screens/HomeScreen.js</MonoText>
-          </View>
-
-          <Text style={styles.getStartedText}>
-            Change this text and your app will automatically reload.
-          </Text>
-        </View>
-
-        <View style={styles.helpContainer}>
-          <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>Convert Gregorian to Hebrew</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-
-      <View style={styles.tabBarInfoContainer}>
-        <Text style={styles.tabBarInfoText}>
-          This is a tab bar. You can edit it in:
-        </Text>
-
-        <View
-          style={[styles.codeHighlightContainer, styles.navigationFilename]}
-        >
-          <MonoText style={styles.codeHighlightText}>
-            navigation/MainTabNavigator.js
-          </MonoText>
-        </View>
-      </View>
+      <FlatList
+        style={styles.listContainer}
+        data={sortedReminders}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => <Text>{item.date}</Text>}
+        ListEmptyComponent={emptyComponent}
+      />
     </View>
   );
 };
 
-HomeScreen.navigationOptions = {
-  header: null
-};
+const mapStateToProps = (state: ApplicationState) => ({
+  people: state.People.response,
+  reminders: state.Reminders.response
+});
 
-const DevelopmentModeNotice = () => {
-  if (__DEV__) {
-    const learnMoreButton = (
-      <Text onPress={handleLearnMorePress} style={styles.helpLinkText}>
-        Learn more
-      </Text>
-    );
+export const HomeScreen = connect(mapStateToProps)(DisconnectedHomeScreen);
 
-    return (
-      <Text style={styles.developmentModeText}>
-        Development mode is enabled: your app will be slower but you can use
-        useful development tools. {learnMoreButton}
-      </Text>
-    );
-  }
-  return (
-    <Text style={styles.developmentModeText}>
-      You are not in development mode: your app will run at full speed.
-    </Text>
-  );
-};
-
-const handleLearnMorePress = () => {
-  WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/versions/latest/workflow/development-mode/'
-  );
-};
-
-const handleHelpPress = async () => {
-  WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/versions/latest/workflow/up-and-running/#cant-see-your-changes'
-  );
-};
+(HomeScreen as any).navigationOptions = ({ navigation }: any) => ({
+  title: 'Yahrzeit Reminders',
+  headerRight: (
+    <TouchableOpacity onPress={() => navigation.navigate('AddReminder')}>
+      <MaterialIcons
+        name="add-alert"
+        style={{ marginRight: 10 }}
+        color={Colors.tabIconSelected}
+        size={26}
+      />
+    </TouchableOpacity>
+  )
+});
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff'
+    flex: 1
   },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
+  listContainer: {
+    flex: 1
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    height: Layout.window.height - (Header.HEIGHT + 60),
+    justifyContent: 'center'
+  },
+  emptyImage: {
+    // width: 100,
+    // height: 80,
+    resizeMode: 'contain'
+  },
+  emptyMessage: {
+    fontSize: 18,
+    lineHeight: 30,
+    paddingHorizontal: 10,
+    paddingVertical: 30,
     textAlign: 'center'
   },
-  contentContainer: {
-    paddingTop: 30
-  },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10
-  },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50
-  },
-  homeScreenFilename: {
-    marginVertical: 7
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)'
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center'
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3
-      },
-      android: {
-        elevation: 20
-      }
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center'
-  },
-  navigationFilename: {
-    marginTop: 5
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: 'center'
-  },
-  helpLink: {
-    paddingVertical: 15
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7'
+  arrow: {
+    bottom: 40,
+    position: 'absolute'
   }
 });
