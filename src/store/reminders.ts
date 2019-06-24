@@ -13,7 +13,7 @@ const ADD = 'ADD';
 const EDIT = 'EDIT';
 const REMOVE = 'REMOVE';
 
-export interface RemindersState extends AsyncState<Reminder[]> { }
+export interface RemindersState extends AsyncState<Reminder[]> {}
 
 const initialState: RemindersState = {
   response: undefined,
@@ -28,13 +28,14 @@ const resetAction = actionCreator(RESET);
 
 export const reset = () => resetAction();
 
-const addAction = actionCreator<{ person: Reminder }>(ADD);
+const addAction = actionCreator<{ reminder: Reminder }>(ADD);
 
-export const add = (person: Reminder) => addAction({ person });
+export const add = (reminder: Reminder) => addAction({ reminder });
 
-const editAction = actionCreator<{ person: Reminder }>(EDIT);
+const editAction = actionCreator<{ reminder: Reminder }>(EDIT);
 
-export const edit = (person: Reminder) => editAction({ person });
+// TODO: Cancel and create new notification
+export const edit = (reminder: Reminder) => editAction({ reminder });
 
 const removeAction = asyncActionCreator<{ id: string }, Reminder[] | undefined>(
   REMOVE,
@@ -55,14 +56,17 @@ export const remove = (id: string) => removeAction.action({ id });
 export const reducer = reducerWithInitialState(initialState)
   .case(rehydrateAction, state => state)
   .case(resetAction, _ => ({ ...initialState }))
-  .case(addAction, (state, { person }) => ({
+  .case(addAction, (state, { reminder }) => ({
     ...state,
-    response: state.response ? [...state.response, person] : undefined
+    response: state.response ? [...state.response, reminder] : undefined
   }))
-  .case(editAction, (state, { person }) => ({
+  .case(editAction, (state, { reminder }) => ({
     ...state,
     response: state.response
-      ? [...state.response.filter((p: Reminder) => p.id !== person.id), person]
+      ? [
+          ...state.response.filter((p: Reminder) => p.id !== reminder.id),
+          reminder
+        ]
       : undefined
   }))
   .case(removeAction.async.started, state => ({
@@ -70,7 +74,7 @@ export const reducer = reducerWithInitialState(initialState)
     loading: true,
     error: undefined
   }))
-  .case(removeAction.async.done, (state, { result: response }) => ({
+  .case(removeAction.async.done, (_, { result: response }) => ({
     response,
     loading: false,
     error: undefined
