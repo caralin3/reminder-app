@@ -1,7 +1,6 @@
-import { AppLoading, Notifications } from 'expo';
+import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
-import * as Permissions from 'expo-permissions';
 import React from 'react';
 import { Platform, StatusBar, StyleSheet, View, YellowBox } from 'react-native';
 import { Provider } from 'react-redux';
@@ -16,21 +15,24 @@ import {
 } from '@expo/vector-icons';
 import AppNavigator from './src/navigation/AppNavigator';
 import { ApplicationState, createStore } from './src/store';
+import { registerForPushNotifications } from './src/utility';
 
 YellowBox.ignoreWarnings([
   'Warning: componentWillMount is deprecated',
   'Warning: componentWillReceiveProps is deprecated'
 ]);
 
-const App = (props: any) => {
+interface AppProps {
+  skipLoadingScreen: boolean;
+}
+
+const App: React.FC<AppProps> = ({ skipLoadingScreen }) => {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
-  const [token, setToken] = React.useState('');
 
   const store: Store<ApplicationState> = createStore();
-  let subscription: any;
 
   React.useEffect(() => {
-    registerForPushNotifications();
+    registerForPushNotifications(store);
   }, []);
 
   const loadResourcesAsync = async () => {
@@ -62,33 +64,47 @@ const App = (props: any) => {
     setLoadingComplete(true);
   };
 
-  const handleNotification = (notification: any) => {
-    console.log('Notification', notification);
-  };
+  // const handleNotification = (notification: any) => {
+  //   console.log('Notification', notification);
+  //   const { personId, personName } = notification.data;
+  //   if (navigator) {
+  //     store.dispatch(
+  //       NavigationActions.navigate({
+  //         routeName: 'Profile',
+  //         params: {
+  //           id: personId,
+  //           name: personName
+  //         }
+  //       })
+  //     );
+  //   } else {
+  //     console.log('No nav');
+  //   }
+  // };
 
-  const registerForPushNotifications = async () => {
-    try {
-      const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+  // const registerForPushNotifications = async () => {
+  //   try {
+  //     const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
 
-      if (status !== 'granted') {
-        const { status } = await Permissions.askAsync(
-          Permissions.NOTIFICATIONS
-        );
-        if (status !== 'granted') {
-          return;
-        }
-      }
+  //     if (status !== 'granted') {
+  //       const { status } = await Permissions.askAsync(
+  //         Permissions.NOTIFICATIONS
+  //       );
+  //       if (status !== 'granted') {
+  //         return;
+  //       }
+  //     }
 
-      const pushToken = await Notifications.getExpoPushTokenAsync();
-      console.log('Token', pushToken);
-      setToken(pushToken);
-      subscription = Notifications.addListener(handleNotification);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  //     (store.dispatch as ThunkDispatch<ApplicationState, void, AnyAction>)(
+  //       sessionState.setPushToken()
+  //     );
+  //     subscription = Notifications.addListener(handleNotification);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
-  if (!isLoadingComplete && !props.skipLoadingScreen) {
+  if (!isLoadingComplete && !skipLoadingScreen) {
     return (
       <Provider store={store}>
         <PersistGate persistor={persistStore(store)}>
@@ -120,5 +136,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   }
 });
+
+// const actionCreators = {
+//   setPushToken: () => sessionState.setPushToken()
+// };
+
+// const mapActionsToProps = (dispatch: Dispatch) => ({
+//   ...bindActionCreators(actionCreators, dispatch)
+// });
+// export const App = connect(null, mapActionsToProps)(
+//   DisconnectedApp
+// );
 
 export default App;

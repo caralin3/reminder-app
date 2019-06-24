@@ -21,12 +21,12 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
 import { Person, Reminder } from '../types';
 import { mockReminders as reminders, mockPeople as people } from '../mock';
-import { sort } from '../utility';
+import { sort, listenForNotifications } from '../utility';
 import { ReminderListItem } from '../components';
 
 export interface HomeScreenProps extends NavigationScreenProps {
   people: Person[];
-  reminders: Reminder[];
+  reminders?: Reminder[];
 }
 
 export const DisconnectedHomeScreen: React.FC<HomeScreenProps> = ({
@@ -36,6 +36,10 @@ export const DisconnectedHomeScreen: React.FC<HomeScreenProps> = ({
 }) => {
   const [bounceValue] = React.useState<Animated.Value>(new Animated.Value(0));
   const sortedReminders = reminders ? sort(reminders, 'desc', 'date') : [];
+
+  React.useEffect(() => {
+    listenForNotifications(navigation);
+  }, []);
 
   React.useEffect(() => {
     if (reminders.length === 0) {

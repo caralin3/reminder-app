@@ -4,9 +4,11 @@ import {
   NavigationScreenProp
 } from 'react-navigation';
 
+export type Navigation = NavigationScreenProp<
+  NavigationRoute<NavigationParams>,
+  NavigationParams
+>;
+
 export interface NavigationOptionsProps {
-  navigation: NavigationScreenProp<
-    NavigationRoute<NavigationParams>,
-    NavigationParams
-  >;
+  navigation: Navigation;
 }

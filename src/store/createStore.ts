@@ -5,6 +5,7 @@ import thunk from 'redux-thunk';
 import { AsyncStorage } from 'react-native';
 import * as people from './people';
 import * as reminders from './reminders';
+import * as session from './session';
 import { ApplicationState } from '.';
 
 declare const window: any;
@@ -25,7 +26,8 @@ export default (): Store<ApplicationState> => {
 
   const rootReducer = persistCombineReducers<ApplicationState>(persistConfig, {
     People: people.reducer,
-    Reminders: reminders.reducer
+    Reminders: reminders.reducer,
+    Session: session.reducer
   });
 
   return createStore(rootReducer, undefined, middleware);

@@ -24,7 +24,12 @@ import {
 import Colors from '../constants/Colors';
 import { isIos } from '../constants/System';
 import { Person } from '../types';
-import { renderAndroidDatePicker, renderAndroidTimePicker } from '../utility';
+import {
+  renderAndroidDatePicker,
+  renderAndroidTimePicker,
+  scheduleNotification,
+  LocalNotification
+} from '../utility';
 
 export interface ReminderFormProps {
   addPerson: (person: Person) => void;
@@ -82,49 +87,59 @@ export const ReminderForm: React.FC<ReminderFormProps> = ({
 
   const handleSubmit = async () => {
     const errors = getErrors();
-    if (errors.length === 0) {
-      try {
-        const years = Math.ceil(moment().diff(dod, 'years', true));
-        const hebrewRes: ConverterResponse = await fetchHebrewDate(
-          new Date(dod),
-          afterSunset
-        );
-        const { hd, hm, hy } = hebrewRes;
-        const hDod = `${hm} ${hd}, ${hy}`;
-        const gregRes: ConverterResponse = await fetchGregorianDate(
-          hy + years,
-          hm as HebrewMonths,
-          hd
-        );
-        const nextDate = new Date(gregRes.gy, gregRes.gm, gregRes.gd);
-        const newPerson: Person = {
-          afterSunset,
-          hDod,
-          dod,
-          name,
-          id: uuidv4()
-        };
-        addPerson(newPerson);
-        const message = `${newPerson.name} passed on:
-          \n${moment(newPerson.dod).format('MMMM DD, YYYY')} ${
-          afterSunset ? 'after sundown' : 'before sundown'
-        }
-          \nHebrew Date: ${hDod}
-          \nNext Yahrzeit Candle lighting:
-          \nThe night before ${moment(nextDate).format('MMMM DD, YYYY')}
-        `;
-        Alert.alert('Added', message, [
-          {
-            text: 'OK',
-            onPress: () => navigation.goBack()
-          }
-        ]);
-      } catch (err) {
-        console.error(err);
-      }
-    } else {
-      console.log(errors);
+    // if (errors.length === 0) {
+    try {
+      console.log('Here');
+      const notification: LocalNotification = {
+        title: 'Yahrzeit Reminder',
+        body: `Light ${name}'s Candle`
+      };
+      const notificationId = await scheduleNotification(
+        notification,
+        new Date().getTime() + 1000
+      );
+      console.log(notificationId);
+      // const years = Math.ceil(moment().diff(dod, 'years', true));
+      // const hebrewRes: ConverterResponse = await fetchHebrewDate(
+      //   new Date(dod),
+      //   afterSunset
+      // );
+      // const { hd, hm, hy } = hebrewRes;
+      // const hDod = `${hm} ${hd}, ${hy}`;
+      // const gregRes: ConverterResponse = await fetchGregorianDate(
+      //   hy + years,
+      //   hm as HebrewMonths,
+      //   hd
+      // );
+      // const nextDate = new Date(gregRes.gy, gregRes.gm, gregRes.gd);
+      // const newPerson: Person = {
+      //   afterSunset,
+      //   hDod,
+      //   dod,
+      //   name,
+      //   id: uuidv4()
+      // };
+      // addPerson(newPerson);
+      // const message = `${newPerson.name} passed on:
+      //   \n${moment(newPerson.dod).format('MMMM DD, YYYY')} ${
+      //   afterSunset ? 'after sundown' : 'before sundown'
+      // }
+      //   \nHebrew Date: ${hDod}
+      //   \nNext Yahrzeit Candle lighting:
+      //   \nThe night before ${moment(nextDate).format('MMMM DD, YYYY')}
+      // `;
+      // Alert.alert('Added', message, [
+      //   {
+      //     text: 'OK',
+      //     onPress: () => navigation.goBack()
+      //   }
+      // ]);
+    } catch (err) {
+      console.error(err);
     }
+    // } else {
+    //   console.log(errors);
+    // }
   };
 
   return (
